@@ -706,6 +706,7 @@ int arvore_2_3_remover(Arvore23 **raiz, int chave)
 
 
 void freeTree(Arvore23 **no)
+
 {
     if (*no != NULL) {
         freeTree(&((*no)->esq));
@@ -713,5 +714,282 @@ void freeTree(Arvore23 **no)
         if ((*no)->nInfos == 2)
             freeTree(&((*no)->dir));
         freeNo(no);
+    }
+}
+
+// CURSOS
+
+
+Arvore23 *buscar23(Arvore23 *raiz, int chave)
+{
+    Arvore23 *resultado = NULL;
+
+    if (raiz != NULL) {
+
+        if (raiz->info1.chave == chave) {
+            resultado = raiz;
+        }
+        else if (
+            raiz->nInfos == 2 &&
+            raiz->info2.chave == chave
+        ) {
+            resultado = raiz;
+        }
+        else {
+
+            if (chave < raiz->info1.chave) {
+                resultado = buscar23(raiz->esq, chave);
+            }
+            else if (
+                raiz->nInfos == 1 ||
+                chave < raiz->info2.chave
+            ) {
+                resultado = buscar23(raiz->cent, chave);
+            }
+            else {
+                resultado = buscar23(raiz->dir, chave);
+            }
+        }
+    }
+
+    return resultado;
+}
+
+
+void cadastrarCurso(
+    Arvore23 **raizCursos,
+    Curso curso,
+    int *flag
+)
+{
+    Arvore23 *existe = NULL;
+
+    *flag = 0;
+
+    existe = buscar23(*raizCursos, curso.codigo);
+
+    if (existe == NULL) {
+
+        Info info;
+
+        curso.raizdisciplinas = NULL;
+
+        info.chave = curso.codigo;
+        info.tipo = 2;
+        info.dado.curso = curso;
+
+        inserirArvore23(raizCursos, info);
+
+        *flag = 1;
+    }
+}
+
+void cadastrarAluno(
+    Arvore23 **raizAlunos,
+    Arvore23 *raizCursos,
+    Aluno aluno,
+    int *flag
+)
+{
+    Arvore23 *existeAluno = NULL;
+    Arvore23 *existeCurso = NULL;
+
+    *flag = 0;
+
+    existeAluno = buscar23(*raizAlunos, aluno.matricula);
+
+    existeCurso = buscar23(
+        raizCursos,
+        aluno.codigo_curso
+    );
+
+    if (
+        existeAluno == NULL &&
+        existeCurso != NULL &&
+        (
+            aluno.semestre == 1 ||
+            aluno.semestre == 2
+        )
+    ) {
+
+        Info info;
+
+        info.chave = aluno.matricula;
+        info.tipo = 1;
+        info.dado.aluno = aluno;
+
+        inserirArvore23(raizAlunos, info);
+
+        *flag = 1;
+    }
+}
+
+void cadastrarDisciplina(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    Disciplina disciplina,
+    int *flag
+)
+{
+    Arvore23 *noCurso = NULL;
+
+    *flag = 0;
+
+    noCurso = buscar23(
+        raizCursos,
+        codigoCurso
+    );
+
+    if (noCurso != NULL) {
+
+        Curso *curso = NULL;
+
+        if (
+            noCurso->info1.chave ==
+            codigoCurso
+        ) {
+            curso =
+            &(noCurso->info1.dado.curso);
+        }
+        else {
+            curso =
+            &(noCurso->info2.dado.curso);
+        }
+
+        if (
+            disciplina.bloco <
+            curso->qtdBlocos
+        ) {
+
+            if (
+                disciplina.cargahr %
+                curso->semanas == 0
+            ) {
+
+                Arvore23 *existeDisciplina;
+
+                existeDisciplina =
+                buscar23(
+                    curso->raizdisciplinas,
+                    disciplina.codigo
+                );
+
+                if (
+                    existeDisciplina == NULL
+                ) {
+
+                    Info info;
+
+                    info.chave =
+                    disciplina.codigo;
+
+                    info.tipo = 3;
+
+                    info.dado.disciplina =
+                    disciplina;
+
+                    inserirArvore23(
+                        &(curso->raizdisciplinas),
+                        info
+                    );
+
+                    *flag = 1;
+                }
+            }
+        }
+    }
+}
+
+
+// Essas funções exibircurso, exibiraluno e exibir disciplina
+// são só pra testar curso, disciplina e aluno estavam funcionando (vou remover amanhã)
+
+void exibirCurso(Info info)
+{
+    if (info.tipo == 2) {
+
+        Curso c = info.dado.curso;
+
+        printf(
+            "\nCodigo: %d",
+            c.codigo
+        );
+
+        printf(
+            "\nNome: %s",
+            c.nome
+        );
+
+        printf(
+            "\nBlocos: %d",
+            c.qtdBlocos
+        );
+
+        printf(
+            "\nSemanas: %d\n",
+            c.semanas
+        );
+    }
+}
+
+void exibirAluno(Info info)
+{
+    if (info.tipo == 1) {
+
+        Aluno a = info.dado.aluno;
+
+        printf(
+            "\nMatricula: %d",
+            a.matricula
+        );
+
+        printf(
+            "\nNome: %s",
+            a.nome
+        );
+
+        printf(
+            "\nCurso: %d",
+            a.codigo_curso
+        );
+
+        printf(
+            "\nAno: %d",
+            a.anoingresso
+        );
+
+        printf(
+            "\nSemestre: %d\n",
+            a.semestre
+        );
+    }
+}
+
+void exibirDisciplina(Info info)
+{
+    if (info.tipo == 3) {
+
+        Disciplina d =
+        info.dado.disciplina;
+
+        printf(
+            "\nCodigo: %d",
+            d.codigo
+        );
+
+        printf(
+            "\nNome: %s",
+            d.nome
+        );
+
+        printf(
+            "\nBloco: %d",
+            d.bloco
+        );
+
+        printf(
+            "\nCarga Horaria: %d\n",
+            d.cargahr
+        );
     }
 }

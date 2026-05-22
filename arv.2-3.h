@@ -53,6 +53,26 @@ struct Arvore23 {
     struct Arvore23 *dir;   
 };
 
+void cadastrarCurso(
+    Arvore23 **raizCursos,
+    Curso curso,
+    int *flag
+);
+
+void cadastrarAluno(
+    Arvore23 **raizAlunos,
+    Arvore23 *raizCursos,
+    Aluno aluno,
+    int *flag
+);
+
+void cadastrarDisciplina(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    Disciplina disciplina,
+    int *flag
+);
+
 
 int      inserirArvore23(Arvore23 **arvore, Info info);
 
@@ -66,6 +86,16 @@ void     freeTree(Arvore23 **no);
 
 void     freeNo(Arvore23 **no);
 
+Arvore23 *buscar23(Arvore23 *raiz, int chave);
+
+
+
+// Funções de teste que vou remover
+void exibirCurso(Info info);
+
+void exibirAluno(Info info);
+
+void exibirDisciplina(Info info);
 
 
 
