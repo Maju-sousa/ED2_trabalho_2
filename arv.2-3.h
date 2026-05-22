@@ -1,4 +1,3 @@
-
 #ifndef ARVORE23_H
 #define ARVORE23_H
 
@@ -6,74 +5,68 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct Arvore23 Arvore23;
 
-typedef struct Curso Curso;
-typedef struct Disciplina Disciplina;
-typedef struct Aluno Aluno;
 
-typedef struct Nobase23 {
 
-    struct Nobase23 *esq;
-    struct Nobase23 *centro;
-    struct Nobase23 *dir;
-
-    int qtdInfos;
-
-} Nobase23;
-
-typedef struct Arv23Disciplina Arv23Disciplina;
-
-struct Arv23Disciplina {
-
-    Nobase23 base;
-
-    Disciplina *info1;
-    Disciplina *info2;
-};
-
-typedef struct Arv23Aluno Arv23Aluno;
-
-struct Arv23Aluno {
-
-    Nobase23 base;
-
-    Aluno *info1;
-    Aluno *info2;
-};
-struct Arv23Curso {
-
-    Nobase23 base;
-
-    Curso *info1;
-    Curso *info2;
-};
-
-typedef struct Curso {
-    int codigo;
-    char nome[50];
-    int qtdBlocos;
-    int semanas;
-
-    Arv23Disciplina *raizdisciplinas;
-
-} Curso;
-typedef struct Aluno {
-
-    int matricula;
-    char nome[50];
-    int anoingresso;
-    int semestre;
-
-    Curso *curso;
-
-} Aluno;
-typedef struct Disciplina {
-
-    int codigo;
-    char nome[50];
-    int bloco;
-    int cargahr;
-
+typedef struct {
+    int  codigo;        
+    char nome[50];      
+    int  bloco;         
+    int  cargahr;       
 } Disciplina;
 
-#endif
+typedef struct {
+    int       codigo;           
+    char      nome[50];        
+    int       qtdBlocos;        
+    int       semanas;          
+    Arvore23 *raizdisciplinas; 
+} Curso;
+
+typedef struct {
+    int  matricula;     
+    char nome[50];      
+    int  codigo_curso;  
+    int  anoingresso;   
+    int  semestre;      
+} Aluno;
+
+
+typedef struct {
+    int chave; 
+    int tipo;  
+    union {
+        Aluno      aluno;
+        Curso      curso;
+        Disciplina disciplina;
+    } dado;
+} Info;
+
+
+struct Arvore23 {
+    Info           info1;   
+    Info           info2;   
+    int            nInfos;  
+    struct Arvore23 *esq;   
+    struct Arvore23 *cent;  
+    struct Arvore23 *dir;   
+};
+
+
+int      inserirArvore23(Arvore23 **arvore, Info info);
+
+Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 **Pai);
+
+void exibir_Arvore23(Arvore23 *raiz, void (*exibir_dado)(Info));
+
+int      arvore_2_3_remover(Arvore23 **raiz, int chave);
+
+void     freeTree(Arvore23 **no);
+
+void     freeNo(Arvore23 **no);
+
+
+
+
+#endif 
