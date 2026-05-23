@@ -98,5 +98,40 @@ void exibirAluno(Info info);
 void exibirDisciplina(Info info);
 
 
+void listarAlunosPorCurso(
+    Arvore23 *raizAlunos,
+    int codigoCurso,
+    Aluno *resultado,
+    int *quantidade
+);
+
+void listarAlunosPorCursoEAno(
+    Arvore23 *raizAlunos,
+    int codigoCurso,
+    int anoIngresso,
+    Aluno *resultado,
+    int *quantidade
+);
+
+
+void contarAlunosPorCurso(
+    Arvore23 *raizAlunos,
+    int codigoCurso,
+    int *quantidade
+);
+
+void listarCursosEmOrdem(
+    Arvore23 *raizCursos,
+    Curso *resultado,
+    int *quantidade
+);
+
+
+void buscarDadosCurso(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    Curso *resultado,
+    int *encontrado
+);
 
 #endif 

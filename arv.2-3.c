@@ -901,95 +901,159 @@ void cadastrarDisciplina(
 }
 
 
-// Essas funções exibircurso, exibiraluno e exibir disciplina
-// são só pra testar curso, disciplina e aluno estavam funcionando (vou remover amanhã)
+// aux função 1
 
-void exibirCurso(Info info)
+void coletarAlunos(
+    Arvore23 *raiz,
+    int codigoCurso,
+    int anoIngresso,
+    int filtrarAno,
+    Aluno *resultado,
+    int *quantidade
+)
 {
-    if (info.tipo == 2) {
+    if (raiz != NULL) {
 
-        Curso c = info.dado.curso;
+        coletarAlunos(raiz->esq, codigoCurso, anoIngresso, filtrarAno, resultado, quantidade);
 
-        printf(
-            "\nCodigo: %d",
-            c.codigo
-        );
+        if (raiz->info1.tipo == 1 &&
+            raiz->info1.dado.aluno.codigo_curso == codigoCurso)
+        {
+            if (!filtrarAno || raiz->info1.dado.aluno.anoingresso == anoIngresso) {
+                resultado[*quantidade] = raiz->info1.dado.aluno;
+                (*quantidade)++;
+            }
+        }
 
-        printf(
-            "\nNome: %s",
-            c.nome
-        );
+        coletarAlunos(raiz->cent, codigoCurso, anoIngresso, filtrarAno, resultado, quantidade);
 
-        printf(
-            "\nBlocos: %d",
-            c.qtdBlocos
-        );
+        if (raiz->nInfos == 2) {
 
-        printf(
-            "\nSemanas: %d\n",
-            c.semanas
-        );
+            if (raiz->info2.tipo == 1 &&
+                raiz->info2.dado.aluno.codigo_curso == codigoCurso)
+            {
+                if (!filtrarAno || raiz->info2.dado.aluno.anoingresso == anoIngresso) {
+                    resultado[*quantidade] = raiz->info2.dado.aluno;
+                    (*quantidade)++;
+                }
+            }
+
+            coletarAlunos(raiz->dir, codigoCurso, anoIngresso, filtrarAno, resultado, quantidade);
+        }
     }
 }
 
-void exibirAluno(Info info)
+
+// função 1
+void listarAlunosPorCurso(
+    Arvore23 *raizAlunos,
+    int codigoCurso,
+    Aluno *resultado,
+    int *quantidade
+)
 {
-    if (info.tipo == 1) {
+    *quantidade = 0;
+    coletarAlunos(raizAlunos, codigoCurso, 0, 0, resultado, quantidade);
+}
 
-        Aluno a = info.dado.aluno;
+// função 2
+void listarAlunosPorCursoEAno(
+    Arvore23 *raizAlunos,
+    int codigoCurso,
+    int anoIngresso,
+    Aluno *resultado,
+    int *quantidade
+)
+{
+    *quantidade = 0;
+    coletarAlunos(raizAlunos, codigoCurso, anoIngresso, 1, resultado, quantidade);
+}
 
-        printf(
-            "\nMatricula: %d",
-            a.matricula
-        );
+// Função 3
+void contarAlunosPorCurso(
+    Arvore23 *raizAlunos,
+    int codigoCurso,
+    int *quantidade
+)
+{
+    if (raizAlunos != NULL) {
 
-        printf(
-            "\nNome: %s",
-            a.nome
-        );
+        contarAlunosPorCurso(raizAlunos->esq, codigoCurso, quantidade);
 
-        printf(
-            "\nCurso: %d",
-            a.codigo_curso
-        );
+        if (raizAlunos->info1.tipo == 1 &&
+            raizAlunos->info1.dado.aluno.codigo_curso == codigoCurso)
+        {
+            (*quantidade)++;
+        }
 
-        printf(
-            "\nAno: %d",
-            a.anoingresso
-        );
+        contarAlunosPorCurso(raizAlunos->cent, codigoCurso, quantidade);
 
-        printf(
-            "\nSemestre: %d\n",
-            a.semestre
-        );
+        if (raizAlunos->nInfos == 2) {
+
+            if (raizAlunos->info2.tipo == 1 &&
+                raizAlunos->info2.dado.aluno.codigo_curso == codigoCurso)
+            {
+                (*quantidade)++;
+            }
+
+            contarAlunosPorCurso(raizAlunos->dir, codigoCurso, quantidade);
+        }
     }
 }
 
-void exibirDisciplina(Info info)
+// Função 4
+void listarCursosEmOrdem(
+    Arvore23 *raizCursos,
+    Curso *resultado,
+    int *quantidade
+)
 {
-    if (info.tipo == 3) {
+    if (raizCursos != NULL) {
 
-        Disciplina d =
-        info.dado.disciplina;
+        listarCursosEmOrdem(raizCursos->esq, resultado, quantidade);
 
-        printf(
-            "\nCodigo: %d",
-            d.codigo
-        );
+        if (raizCursos->info1.tipo == 2) {
+            resultado[*quantidade] = raizCursos->info1.dado.curso;
+            (*quantidade)++;
+        }
 
-        printf(
-            "\nNome: %s",
-            d.nome
-        );
+        listarCursosEmOrdem(raizCursos->cent, resultado, quantidade);
 
-        printf(
-            "\nBloco: %d",
-            d.bloco
-        );
+        if (raizCursos->nInfos == 2) {
 
-        printf(
-            "\nCarga Horaria: %d\n",
-            d.cargahr
-        );
+            if (raizCursos->info2.tipo == 2) {
+                resultado[*quantidade] = raizCursos->info2.dado.curso;
+                (*quantidade)++;
+            }
+
+            listarCursosEmOrdem(raizCursos->dir, resultado, quantidade);
+        }
+    }
+}
+
+// Função 5
+void buscarDadosCurso(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    Curso *resultado,
+    int *encontrado
+)
+{
+    Arvore23 *no = NULL;
+
+    *encontrado = 0;
+
+    no = buscar23(raizCursos, codigoCurso);
+
+    if (no != NULL) {
+
+        if (no->info1.chave == codigoCurso) {
+            *resultado  = no->info1.dado.curso;
+            *encontrado = 1;
+        }
+        else if (no->nInfos == 2 && no->info2.chave == codigoCurso) {
+            *resultado  = no->info2.dado.curso;
+            *encontrado = 1;
+        }
     }
 }
