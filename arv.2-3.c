@@ -1,6 +1,6 @@
 
 
-#include "arv.2-3.h"
+#include "arv2-3.h"
 
 
  typedef int (*FuncaoRemover)(
@@ -32,10 +32,6 @@ int arvore23_remover2(
 Arvore23 *criaNo(Info informacao, Arvore23 *filhoesq, Arvore23 *filhocen)
 {
     Arvore23 *no = (Arvore23 *)malloc(sizeof(Arvore23));
-    if (no == NULL) {
-        fprintf(stderr, "Erro: falha na alocação de memória.\n");
-        exit(EXIT_FAILURE);
-    }
 
     no->info1  = informacao; 
     no->esq    = filhoesq;
@@ -113,9 +109,12 @@ void freeNo(Arvore23 **no)
 
 Info *no23_maior_info(Arvore23 *raiz)
 {
+    Info *maior = &(raiz->info1);
+
     if (raiz->nInfos == 2)
-        return &(raiz->info2);
-    return &(raiz->info1);
+        maior = &(raiz->info2);
+
+    return maior;
 }
 
 Arvore23 *arvore23_buscar_maior_filho(Arvore23 *raiz, Arvore23 **pai, Info **maior_valor)
@@ -150,9 +149,12 @@ Arvore23 *arvore23_buscar_menor_filho(Arvore23 *raiz, Arvore23 **pai)
 
 int calcular_altura(Arvore23 *no)
 {
-    if (no == NULL)
-        return -1;
-    return 1 + calcular_altura(no->esq);
+    int altura = -1;
+
+    if (no != NULL)
+        altura = 1 + calcular_altura(no->esq);
+
+    return altura;
 }
 
 Arvore23 *arvore23_buscar_pai(Arvore23 *raiz, int chave)
@@ -248,7 +250,7 @@ Arvore23 *arvore23_buscar_menor_pai_2_infos(Arvore23 *raiz, int chave)
 
 Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 **Pai)
 {
-    Info      promove1;
+    Info  promove1;
     Arvore23 *maiorNo = NULL;
 
     if (*no == NULL) {
@@ -298,9 +300,9 @@ Arvore23 *inserirArv23(Arvore23 **no, Info informacao, Info *promove, Arvore23 *
 
 int inserirArvore23(Arvore23 **arvore, Info info)
 {
-    Info      promove;
-    Arvore23 *Pai    = NULL;
-    int       inseriu = 0;
+    Info promove;
+    Arvore23 *Pai = NULL;
+    int inseriu = 0;
 
     if (inserirArv23(arvore, info, &promove, &Pai))
         inseriu = 1;
@@ -331,47 +333,41 @@ void exibir_Arvore23(Arvore23 *raiz, void (*exibir_dado)(Info))
 
 
 
-
-
  //AUXILIARES DE REMOÇÃO
 
-int movimento_onda(Info saindo, Info *entrada, Arvore23 *pai,
-                           Arvore23 **origem, Arvore23 **raiz, Arvore23 **maior,
-                           FuncaoRemover funcao_remover)
+int movimento_onda(Info saindo, Info *entrada, Arvore23 *pai,   Arvore23 **origem, Arvore23 **raiz, Arvore23 **maior,  FuncaoRemover funcao_remover)
 {
     int removeu = funcao_remover(raiz, saindo.chave, pai, origem, maior);
     *entrada = saindo; 
     return removeu;
 }
 
- int arvore23_remover_nao_folha1(Arvore23 **origem, Arvore23 *raiz, Info *info,
-                                        Arvore23 *filho1, Arvore23 *filho2, Arvore23 **maior)
+ int arvore23_remover_nao_folha1(Arvore23 **origem, Arvore23 *raiz, Info *info,    Arvore23 *filho1, Arvore23 *filho2, Arvore23 **maior)
 {
-    int       removeu;
+    int  removeu;
     Arvore23 *filho, *pai;
-    Info     *info_filho;
+    Info *info_filho;
 
-    pai   = raiz;
+    pai = raiz;
     filho = arvore23_buscar_maior_filho(filho1, &pai, &info_filho);
 
     if (filho->nInfos == 2) {
-        *info        = *info_filho;   
+        *info = *info_filho;   
         filho->nInfos = 1;
-        removeu      = 1;
+        removeu = 1;
     } else {
-        filho  = arvore23_buscar_menor_filho(filho2, &pai);
+        filho = arvore23_buscar_menor_filho(filho2, &pai);
         removeu = movimento_onda(filho->info1, info, pai, origem, &filho, maior, arvore23_remover1);
     }
 
     return removeu;
 }
 
-int arvore23_remover_nao_folha2(Arvore23 **origem, Arvore23 *raiz, Info *info,
-                                        Arvore23 *filho1, Arvore23 *filho2, Arvore23 **maior)
+int arvore23_remover_nao_folha2(Arvore23 **origem, Arvore23 *raiz, Info *info,  Arvore23 *filho1, Arvore23 *filho2, Arvore23 **maior)
 {
-    int       removeu = 0;
+    int  removeu = 0;
     Arvore23 *filho, *pai;
-    Info     *info_filho;
+    Info *info_filho;
 
     pai   = raiz;
     filho = arvore23_buscar_menor_filho(filho1, &pai);
@@ -656,7 +652,7 @@ int arvore23_remover1(Arvore23 **raiz, int chave, Arvore23 *pai,
 
 int arvore_2_3_remover(Arvore23 **raiz, int chave)
 {
-    Arvore23 *maior          = NULL;
+    Arvore23 *maior = NULL;
     Arvore23 *posicao_juncao = NULL;
 
     int removeu = arvore23_remover1(raiz, chave, NULL, raiz, &posicao_juncao);
@@ -1054,6 +1050,206 @@ void buscarDadosCurso(
         else if (no->nInfos == 2 && no->info2.chave == codigoCurso) {
             *resultado  = no->info2.dado.curso;
             *encontrado = 1;
+        }
+    }
+}
+//função 6
+void listarCursosqtdblocos(Arvore23 *raiz, int qtdBlocos
+)
+{
+    if (raiz != NULL) {
+
+        listarCursosqtdblocos(
+            raiz->esq,
+            qtdBlocos
+        );
+
+        if (
+            raiz->info1.tipo == 2 &&
+            raiz->info1.dado.curso.qtdBlocos == qtdBlocos
+        ) {
+
+            printf(
+                "\nCodigo: %d",
+                raiz->info1.dado.curso.codigo
+            );
+
+            printf(
+                "\nNome: %s",
+                raiz->info1.dado.curso.nome
+            );
+
+            printf(
+                "\nQuantidade de blocos: %d\n",
+                raiz->info1.dado.curso.qtdBlocos
+            );
+        }
+
+        listarCursosqtdblocos(
+            raiz->cent,
+            qtdBlocos
+        );
+
+        if (raiz->nInfos == 2) {
+
+            if (
+                raiz->info2.tipo == 2 &&
+                raiz->info2.dado.curso.qtdBlocos == qtdBlocos
+            ) {
+
+                printf(
+                    "\nCodigo: %d",
+                    raiz->info2.dado.curso.codigo
+                );
+
+                printf(
+                    "\nNome: %s",
+                    raiz->info2.dado.curso.nome
+                );
+
+                printf(
+                    "\nQuantidade de blocos: %d\n",
+                    raiz->info2.dado.curso.qtdBlocos
+                );
+            }
+            listarCursosqtdblocos(
+                raiz->dir,
+                qtdBlocos
+            );
+        }
+    }
+}
+//7
+void listarDisciplinasOrdem(
+    Arvore23 *raiz
+)
+{
+    if (raiz != NULL) {
+
+        listarDisciplinasOrdem(
+            raiz->esq
+        );
+
+        if (raiz->info1.tipo == 3) {
+
+            printf(
+                "\nCodigo: %d",
+                raiz->info1.dado.disciplina.codigo
+            );
+
+            printf(
+                "\nNome: %s",
+                raiz->info1.dado.disciplina.nome
+            );
+
+            printf(
+                "\nBloco: %d\n",
+                raiz->info1.dado.disciplina.bloco
+            );
+        }
+
+        listarDisciplinasOrdem(
+            raiz->cent
+        );
+
+        if (raiz->nInfos == 2) {
+
+            if (raiz->info2.tipo == 3) {
+
+                printf(
+                    "\nCodigo: %d",
+                    raiz->info2.dado.disciplina.codigo
+                );
+
+                printf(
+                    "\nNome: %s",
+                    raiz->info2.dado.disciplina.nome
+                );
+
+                printf(
+                    "\nBloco: %d\n",
+                    raiz->info2.dado.disciplina.bloco
+                );
+            }
+
+            listarDisciplinasOrdem(
+                raiz->dir
+            );
+        }
+    }
+}
+//8
+void DadosDisciplina(
+    Arvore23 *noCurso,
+    int codigoCurso,
+    int codigoDisciplina
+)
+{
+    Curso *curso;
+
+    if (noCurso->info1.chave == codigoCurso)
+        curso = &(noCurso->info1.dado.curso);
+    else
+        curso = &(noCurso->info2.dado.curso);
+
+    Arvore23 *disc = buscar23(
+        curso->raizdisciplinas,
+        codigoDisciplina
+    );
+
+    Disciplina d;
+
+    if (disc->info1.chave == codigoDisciplina)
+        d = disc->info1.dado.disciplina;
+    else
+        d = disc->info2.dado.disciplina;
+
+    printf("\nCodigo: %d", d.codigo);
+    printf("\nNome: %s", d.nome);
+    printf("\nBloco: %d\n", d.bloco);
+}
+//9
+
+void listarDisciplinasPorBloco(
+    Arvore23 *raiz,
+    int bloco
+)
+{
+    if (raiz != NULL) {
+
+        listarDisciplinasPorBloco(
+            raiz->esq,
+            bloco
+        );
+
+        if (
+            raiz->info1.tipo == 3 &&
+            raiz->info1.dado.disciplina.bloco == bloco
+        ) {
+            printf("\nCodigo: %d", raiz->info1.dado.disciplina.codigo);
+            printf("\nNome: %s", raiz->info1.dado.disciplina.nome);
+            printf("\nBloco: %d\n", raiz->info1.dado.disciplina.bloco);
+        }
+
+        listarDisciplinasPorBloco(
+            raiz->cent,
+            bloco
+        );
+
+        if (raiz->nInfos == 2) {
+            if (
+                raiz->info2.tipo == 3 &&
+                raiz->info2.dado.disciplina.bloco == bloco
+            ) {
+                printf("\nCodigo: %d", raiz->info2.dado.disciplina.codigo);
+                printf("\nNome: %s", raiz->info2.dado.disciplina.nome);
+                printf("\nBloco: %d\n", raiz->info2.dado.disciplina.bloco);
+            }
+
+            listarDisciplinasPorBloco(
+                raiz->dir,
+                bloco
+            );
         }
     }
 }
