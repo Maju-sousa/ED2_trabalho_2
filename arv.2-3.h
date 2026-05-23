@@ -90,13 +90,6 @@ Arvore23 *buscar23(Arvore23 *raiz, int chave);
 
 
 
-// Funções de teste que vou remover
-void exibirCurso(Info info);
-
-void exibirAluno(Info info);
-
-void exibirDisciplina(Info info);
-
 
 void listarAlunosPorCurso(
     Arvore23 *raizAlunos,
