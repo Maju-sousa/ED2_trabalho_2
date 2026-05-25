@@ -1491,3 +1491,90 @@ void listarDisciplinasMesmoCH(
     }
 }
 
+
+
+//11
+
+// e o código do curso
+
+int excluirDisciplinaCurso(Arvore23 *raizCursos,int codigoCurso,int codigoDisciplina
+)
+{
+    int removeu = 0;
+
+    Arvore23 *noCurso = NULL;
+
+    Curso *curso = NULL;
+
+    noCurso = buscar23(
+        raizCursos,
+        codigoCurso
+    );
+
+    if (noCurso != NULL) {
+
+        
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        
+        if (
+            buscar23(
+                curso->raizdisciplinas,
+                codigoDisciplina
+            ) != NULL
+        ) {
+
+           
+            removeu = arvore_2_3_remover(
+                &(curso->raizdisciplinas),
+                codigoDisciplina
+            );
+        }
+    }
+
+    return removeu;
+}
+
+//12
+
+
+
+int excluirCurso(
+    Arvore23 **raizCursos,
+    int codigoCurso
+)
+{
+    int removeu = 0;
+
+    Arvore23 *noCurso = NULL;
+
+    Curso *curso = NULL;
+
+    noCurso = buscar23(
+        *raizCursos,
+        codigoCurso
+    );
+
+    if (noCurso != NULL) {
+
+        
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        
+        if (curso->raizdisciplinas == NULL) {
+
+            removeu = arvore_2_3_remover(
+                raizCursos,
+                codigoCurso
+            );
+        }
+    }
+
+    return removeu;
+}
