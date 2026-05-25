@@ -1119,65 +1119,109 @@ void listarCursosqtdblocos(Arvore23 *raiz, int qtdBlocos
         }
     }
 }
+
 //7
-void listarDisciplinasOrdem(
-    Arvore23 *raiz
+void imprimirDisciplinasEmOrdem(
+    Arvore23 *raizDisciplinas
 )
 {
-    if (raiz != NULL) {
+    if (raizDisciplinas != NULL) {
 
-        listarDisciplinasOrdem(
-            raiz->esq
+        imprimirDisciplinasEmOrdem(
+            raizDisciplinas->esq
         );
 
-        if (raiz->info1.tipo == 3) {
+        if (raizDisciplinas->info1.tipo == 3) {
 
             printf(
                 "\nCodigo: %d",
-                raiz->info1.dado.disciplina.codigo
+                raizDisciplinas->info1.dado.disciplina.codigo
             );
 
             printf(
                 "\nNome: %s",
-                raiz->info1.dado.disciplina.nome
+                raizDisciplinas->info1.dado.disciplina.nome
             );
 
             printf(
-                "\nBloco: %d\n",
-                raiz->info1.dado.disciplina.bloco
+                "\nBloco: %d",
+                raizDisciplinas->info1.dado.disciplina.bloco
+            );
+
+            printf(
+                "\nCarga Horaria: %d\n",
+                raizDisciplinas->info1.dado.disciplina.cargahr
             );
         }
 
-        listarDisciplinasOrdem(
-            raiz->cent
+        imprimirDisciplinasEmOrdem(
+            raizDisciplinas->cent
         );
 
-        if (raiz->nInfos == 2) {
+        if (raizDisciplinas->nInfos == 2) {
 
-            if (raiz->info2.tipo == 3) {
+            if (raizDisciplinas->info2.tipo == 3) {
 
                 printf(
                     "\nCodigo: %d",
-                    raiz->info2.dado.disciplina.codigo
+                    raizDisciplinas->info2.dado.disciplina.codigo
                 );
 
                 printf(
                     "\nNome: %s",
-                    raiz->info2.dado.disciplina.nome
+                    raizDisciplinas->info2.dado.disciplina.nome
                 );
 
                 printf(
-                    "\nBloco: %d\n",
-                    raiz->info2.dado.disciplina.bloco
+                    "\nBloco: %d",
+                    raizDisciplinas->info2.dado.disciplina.bloco
+                );
+
+                printf(
+                    "\nCarga Horaria: %d\n",
+                    raizDisciplinas->info2.dado.disciplina.cargahr
                 );
             }
 
-            listarDisciplinasOrdem(
-                raiz->dir
+            imprimirDisciplinasEmOrdem(
+                raizDisciplinas->dir
             );
         }
     }
 }
+// principal
+
+void listarDisciplinasCurso(
+    Arvore23 *raizCursos,
+    int codigoCurso
+)
+{
+    Arvore23 *noCurso = NULL;
+
+    Curso *curso = NULL;
+
+    noCurso = buscar23(
+        raizCursos,
+        codigoCurso
+    );
+
+    if (noCurso != NULL) {
+
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        if (curso->raizdisciplinas != NULL) {
+
+            imprimirDisciplinasEmOrdem(
+                curso->raizdisciplinas
+            );
+        }
+    }
+}
+
+
 //8
 void DadosDisciplina(
     Arvore23 *noCurso,
@@ -1185,71 +1229,265 @@ void DadosDisciplina(
     int codigoDisciplina
 )
 {
-    Curso *curso;
+    Curso *curso = NULL;
 
-    if (noCurso->info1.chave == codigoCurso)
-        curso = &(noCurso->info1.dado.curso);
-    else
-        curso = &(noCurso->info2.dado.curso);
-
-    Arvore23 *disc = buscar23(
-        curso->raizdisciplinas,
-        codigoDisciplina
-    );
+    Arvore23 *disc = NULL;
 
     Disciplina d;
 
-    if (disc->info1.chave == codigoDisciplina)
-        d = disc->info1.dado.disciplina;
-    else
-        d = disc->info2.dado.disciplina;
+    if (noCurso != NULL) {
 
-    printf("\nCodigo: %d", d.codigo);
-    printf("\nNome: %s", d.nome);
-    printf("\nBloco: %d\n", d.bloco);
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        disc = buscar23(
+            curso->raizdisciplinas,
+            codigoDisciplina
+        );
+
+        if (disc != NULL) {
+
+            if (disc->info1.chave == codigoDisciplina)
+                d = disc->info1.dado.disciplina;
+            else
+                d = disc->info2.dado.disciplina;
+
+            printf("\nCodigo: %d", d.codigo);
+
+            printf("\nNome: %s", d.nome);
+
+            printf("\nBloco: %d", d.bloco);
+
+            printf("\nCarga Horaria: %d\n", d.cargahr);
+        }
+    }
 }
 //9
 
-void listarDisciplinasPorBloco(
-    Arvore23 *raiz,
+// aux
+
+void imprimirDisciplinasBloco(
+    Arvore23 *raizDisciplinas,
     int bloco
 )
 {
-    if (raiz != NULL) {
+    if (raizDisciplinas != NULL) {
 
-        listarDisciplinasPorBloco(
-            raiz->esq,
+        imprimirDisciplinasBloco(
+            raizDisciplinas->esq,
             bloco
         );
 
         if (
-            raiz->info1.tipo == 3 &&
-            raiz->info1.dado.disciplina.bloco == bloco
+            raizDisciplinas->info1.tipo == 3 &&
+            raizDisciplinas->info1.dado.disciplina.bloco == bloco
         ) {
-            printf("\nCodigo: %d", raiz->info1.dado.disciplina.codigo);
-            printf("\nNome: %s", raiz->info1.dado.disciplina.nome);
-            printf("\nBloco: %d\n", raiz->info1.dado.disciplina.bloco);
+
+            printf(
+                "\nCodigo: %d",
+                raizDisciplinas->info1.dado.disciplina.codigo
+            );
+
+            printf(
+                "\nNome: %s",
+                raizDisciplinas->info1.dado.disciplina.nome
+            );
+
+            printf(
+                "\nBloco: %d",
+                raizDisciplinas->info1.dado.disciplina.bloco
+            );
+
+            printf(
+                "\nCarga Horaria: %d\n",
+                raizDisciplinas->info1.dado.disciplina.cargahr
+            );
         }
 
-        listarDisciplinasPorBloco(
-            raiz->cent,
+        imprimirDisciplinasBloco(
+            raizDisciplinas->cent,
             bloco
         );
 
-        if (raiz->nInfos == 2) {
+        if (raizDisciplinas->nInfos == 2) {
+
             if (
-                raiz->info2.tipo == 3 &&
-                raiz->info2.dado.disciplina.bloco == bloco
+                raizDisciplinas->info2.tipo == 3 &&
+                raizDisciplinas->info2.dado.disciplina.bloco == bloco
             ) {
-                printf("\nCodigo: %d", raiz->info2.dado.disciplina.codigo);
-                printf("\nNome: %s", raiz->info2.dado.disciplina.nome);
-                printf("\nBloco: %d\n", raiz->info2.dado.disciplina.bloco);
+
+                printf(
+                    "\nCodigo: %d",
+                    raizDisciplinas->info2.dado.disciplina.codigo
+                );
+
+                printf(
+                    "\nNome: %s",
+                    raizDisciplinas->info2.dado.disciplina.nome
+                );
+
+                printf(
+                    "\nBloco: %d",
+                    raizDisciplinas->info2.dado.disciplina.bloco
+                );
+
+                printf(
+                    "\nCarga Horaria: %d\n",
+                    raizDisciplinas->info2.dado.disciplina.cargahr
+                );
             }
 
-            listarDisciplinasPorBloco(
-                raiz->dir,
+            imprimirDisciplinasBloco(
+                raizDisciplinas->dir,
                 bloco
             );
         }
     }
 }
+///principal
+// PRINCIPAL
+
+void listarDisciplinasPorBlocoCurso(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    int bloco
+)
+{
+    Arvore23 *noCurso;
+
+    Curso *curso;
+
+    noCurso = buscar23(
+        raizCursos,
+        codigoCurso
+    );
+
+    if (noCurso != NULL) {
+
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        imprimirDisciplinasBloco(
+            curso->raizdisciplinas,
+            bloco
+        );
+    }
+}
+
+//10
+//aux:
+void imprimirDisciplinasCargaHoraria(
+    Arvore23 *raizDisciplinas,
+    int cargahr
+)
+{
+    if (raizDisciplinas != NULL) {
+
+        imprimirDisciplinasCargaHoraria(
+            raizDisciplinas->esq,
+            cargahr
+        );
+
+        if (
+            raizDisciplinas->info1.tipo == 3 &&
+            raizDisciplinas->info1.dado.disciplina.cargahr == cargahr
+        ) {
+
+            printf(
+                "\nCodigo: %d",
+                raizDisciplinas->info1.dado.disciplina.codigo
+            );
+
+            printf(
+                "\nNome: %s",
+                raizDisciplinas->info1.dado.disciplina.nome
+            );
+
+            printf(
+                "\nBloco: %d",
+                raizDisciplinas->info1.dado.disciplina.bloco
+            );
+
+            printf(
+                "\nCarga Horaria: %d\n",
+                raizDisciplinas->info1.dado.disciplina.cargahr
+            );
+        }
+
+        imprimirDisciplinasCargaHoraria(
+            raizDisciplinas->cent,
+            cargahr
+        );
+
+        if (raizDisciplinas->nInfos == 2) {
+
+            if (
+                raizDisciplinas->info2.tipo == 3 &&
+                raizDisciplinas->info2.dado.disciplina.cargahr == cargahr
+            ) {
+
+                printf(
+                    "\nCodigo: %d",
+                    raizDisciplinas->info2.dado.disciplina.codigo
+                );
+
+                printf(
+                    "\nNome: %s",
+                    raizDisciplinas->info2.dado.disciplina.nome
+                );
+
+                printf(
+                    "\nBloco: %d",
+                    raizDisciplinas->info2.dado.disciplina.bloco
+                );
+
+                printf(
+                    "\nCarga Horaria: %d\n",
+                    raizDisciplinas->info2.dado.disciplina.cargahr
+                );
+            }
+
+            imprimirDisciplinasCargaHoraria(
+                raizDisciplinas->dir,
+                cargahr
+            );
+        }
+    }
+}
+//principal
+void listarDisciplinasMesmoCH(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    int cargahr
+)
+{
+    Arvore23 *noCurso = NULL;
+
+    Curso *curso = NULL;
+
+    noCurso = buscar23(
+        raizCursos,
+        codigoCurso
+    );
+
+    if (noCurso != NULL) {
+
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        if (curso->raizdisciplinas != NULL) {
+
+            imprimirDisciplinasCargaHoraria(
+                curso->raizdisciplinas,
+                cargahr
+            );
+        }
+    }
+}
+
