@@ -151,5 +151,9 @@ void listarDisciplinasPorBloco(
     int *quantidade
 );
 
+void imprimirDisciplinasCargaHoraria(Arvore23 *raizDisciplinas, int cargahr);
 
+void listarDisciplinasMesmoCH(Arvore23 *raizCursos, int codigoCurso, int cargahr);
+
+int excluirDisciplinaCurso(Arvore23 *raizCursos, int codigoCurso, int codigoDisciplina);
 #endif 
