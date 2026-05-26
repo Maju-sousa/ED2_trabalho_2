@@ -28,6 +28,7 @@ int main()
         printf("\n12 - Listar Disciplinas de um Bloco");
         printf("\n13 - Listar Disciplinas por Carga Horaria");
         printf("\n14 - Excluir Disciplina de um Curso");
+        printf("\n15 - Excluir Curso");
         printf("\n0  - Sair");
 
         printf("\n\nOpcao: ");
@@ -456,7 +457,7 @@ int main()
             break;
         }
 
-                case 13:
+        case 13:
         {
             int codigoCurso;
             int cargahr;
@@ -488,7 +489,6 @@ int main()
             break;
         }
 
-       
         case 14:
         {
             int codigoCurso;
@@ -520,6 +520,33 @@ int main()
                 printf("\nDisciplina removida com sucesso!\n");
             else
                 printf("\nDisciplina nao encontrada.\n");
+
+            break;
+        }
+
+        case 15:
+        {
+            int codigoCurso;
+            int removeu = 0;
+
+            printf("\n===== EXCLUIR CURSO =====\n");
+
+            printf("Codigo do curso: ");
+            scanf("%d", &codigoCurso);
+
+            Arvore23 *cursoExiste = buscar23(raizCursos, codigoCurso);
+
+            if (cursoExiste == NULL) {
+                printf("\nCurso nao encontrado.\n");
+                break;
+            }
+
+            removeu = excluirCurso(&raizCursos, codigoCurso);
+
+            if (removeu)
+                printf("\nCurso removido com sucesso!\n");
+            else
+                printf("\nNao e possivel remover: o curso ainda possui disciplinas cadastradas.\n");
 
             break;
         }
