@@ -14,17 +14,19 @@ int main()
         printf("\n        MENU PRINCIPAL");
         printf("\n==============================");
 
-        printf("\n1 - Cadastrar Curso");
-        printf("\n2 - Cadastrar Disciplina");
-        printf("\n3 - Cadastrar Aluno");
-        printf("\n4 - Listar Alunos por Curso");
-        printf("\n5 - Listar Alunos por Curso e Ano de Ingresso");
-        printf("\n6 - Contar Alunos de um Curso");
-        printf("\n7 - Listar Cursos em Ordem Crescente");
-        printf("\n8 - Exibir Dados de um Curso");
-        printf("\n9 - Listar Cursos por Quantidade de Blocos");
+        printf("\n1  - Cadastrar Curso");
+        printf("\n2  - Cadastrar Disciplina");
+        printf("\n3  - Cadastrar Aluno");
+        printf("\n4  - Listar Alunos por Curso");
+        printf("\n5  - Listar Alunos por Curso e Ano de Ingresso");
+        printf("\n6  - Contar Alunos de um Curso");
+        printf("\n7  - Listar Cursos em Ordem Crescente");
+        printf("\n8  - Exibir Dados de um Curso");
+        printf("\n9  - Listar Cursos por Quantidade de Blocos");
         printf("\n10 - Listar Disciplinas de um Curso em Ordem");
-        printf("\n0 - Sair");
+        printf("\n11 - Exibir Dados de uma Disciplina");
+        printf("\n12 - Listar Disciplinas de um Bloco");
+        printf("\n0  - Sair");
 
         printf("\n\nOpcao: ");
         scanf("%d", &opcao);
@@ -194,7 +196,13 @@ int main()
                 break;
             }
 
-            listarAlunosPorCursoEAno(raizAlunos, codigoCurso, anoIngresso, resultado, &quantidade);
+            listarAlunosPorCursoEAno(
+                raizAlunos,
+                codigoCurso,
+                anoIngresso,
+                resultado,
+                &quantidade
+            );
 
             if (quantidade == 0) {
                 printf("\nNenhum aluno encontrado para este curso e ano.\n");
@@ -298,11 +306,6 @@ int main()
             break;
         }
 
-        // ─────────────────────────────────────────
-        // CASO 9: Listar cursos por quantidade de blocos
-        // A funcao listarCursosqtdblocos já possui os prints internamente
-        // conforme fornecida, então a chamada e validação ficam aqui no main
-        // ─────────────────────────────────────────
         case 9:
         {
             int qtdBlocos;
@@ -328,11 +331,6 @@ int main()
             break;
         }
 
-        // ─────────────────────────────────────────
-        // CASO 10: Listar disciplinas de um curso em ordem crescente
-        // A funcao listarDisciplinasCurso já possui a lógica internamente
-        // conforme fornecida, então a chamada e validação ficam aqui no main
-        // ─────────────────────────────────────────
         case 10:
         {
             int codigoCurso;
@@ -356,6 +354,104 @@ int main()
             listarDisciplinasCurso(raizCursos, codigoCurso);
 
             printf("\n---------------------------------------------------------------\n");
+
+            break;
+        }
+
+       
+        case 11:
+        {
+            int codigoCurso;
+            int codigoDisciplina;
+            int encontrado = 0;
+            Disciplina resultado;
+
+            printf("\n===== EXIBIR DADOS DE UMA DISCIPLINA =====\n");
+
+            printf("Codigo do curso: ");
+            scanf("%d", &codigoCurso);
+
+            printf("Codigo da disciplina: ");
+            scanf("%d", &codigoDisciplina);
+
+            Arvore23 *cursoExiste = buscar23(raizCursos, codigoCurso);
+
+            if (cursoExiste == NULL) {
+                printf("\nCurso nao encontrado.\n");
+                break;
+            }
+
+            buscarDadosDisciplina(
+                raizCursos,
+                codigoCurso,
+                codigoDisciplina,
+                &resultado,
+                &encontrado
+            );
+
+            if (!encontrado) {
+                printf("\nDisciplina nao encontrada.\n");
+            } else {
+                printf("\n---------------------------------------------------------------\n");
+                printf("Codigo        : %d\n", resultado.codigo);
+                printf("Nome          : %s\n", resultado.nome);
+                printf("Bloco         : %d\n", resultado.bloco);
+                printf("Carga Horaria : %d\n", resultado.cargahr);
+                printf("---------------------------------------------------------------\n");
+            }
+
+            break;
+        }
+
+        
+        case 12:
+        {
+            int codigoCurso;
+            int bloco;
+            int quantidade = 0;
+            Disciplina resultado[1000];
+
+            printf("\n===== LISTAR DISCIPLINAS DE UM BLOCO =====\n");
+
+            printf("Codigo do curso: ");
+            scanf("%d", &codigoCurso);
+
+            printf("Bloco: ");
+            scanf("%d", &bloco);
+
+            Arvore23 *cursoExiste = buscar23(raizCursos, codigoCurso);
+
+            if (cursoExiste == NULL) {
+                printf("\nCurso nao encontrado.\n");
+                break;
+            }
+
+            listarDisciplinasPorBloco(
+                raizCursos,
+                codigoCurso,
+                bloco,
+                resultado,
+                &quantidade
+            );
+
+            if (quantidade == 0) {
+                printf("\nNenhuma disciplina encontrada para este bloco.\n");
+            } else {
+                printf("\n%-10s %-50s %-10s %-15s\n",
+                    "Codigo", "Nome", "Bloco", "Carga Horaria");
+                printf("---------------------------------------------------------------\n");
+
+                int i;
+                for (i = 0; i < quantidade; i++) {
+                    printf("%-10d %-50s %-10d %-15d\n",
+                        resultado[i].codigo,
+                        resultado[i].nome,
+                        resultado[i].bloco,
+                        resultado[i].cargahr);
+                }
+
+                printf("\nTotal: %d disciplina(s).\n", quantidade);
+            }
 
             break;
         }

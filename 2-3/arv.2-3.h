@@ -133,4 +133,23 @@ void listarCursosqtdblocos(Arvore23 *raiz, int qtdBlocos);
 void imprimirDisciplinasEmOrdem(Arvore23 *raizDisciplinas);
 
 void listarDisciplinasCurso(Arvore23 *raizCursos, int codigoCurso);
+
+
+void buscarDadosDisciplina(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    int codigoDisciplina,
+    Disciplina *resultado,
+    int *encontrado
+);
+
+void listarDisciplinasPorBloco(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    int bloco,
+    Disciplina *resultado,
+    int *quantidade
+);
+
+
 #endif 

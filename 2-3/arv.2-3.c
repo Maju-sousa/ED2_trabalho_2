@@ -1378,6 +1378,142 @@ void listarDisciplinasPorBlocoCurso(
     }
 }
 
+
+// Função 8 
+void buscarDadosDisciplina(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    int codigoDisciplina,
+    Disciplina *resultado,
+    int *encontrado
+)
+{
+    Arvore23 *noCurso       = NULL;
+    Arvore23 *noDisciplina  = NULL;
+    Curso    *curso         = NULL;
+
+    *encontrado = 0;
+
+    noCurso = buscar23(raizCursos, codigoCurso);
+
+    if (noCurso != NULL) {
+
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        noDisciplina = buscar23(
+            curso->raizdisciplinas,
+            codigoDisciplina
+        );
+
+        if (noDisciplina != NULL) {
+
+            if (noDisciplina->info1.chave == codigoDisciplina) {
+                *resultado  = noDisciplina->info1.dado.disciplina;
+                *encontrado = 1;
+            }
+            else if (
+                noDisciplina->nInfos == 2 &&
+                noDisciplina->info2.chave == codigoDisciplina
+            ) {
+                *resultado  = noDisciplina->info2.dado.disciplina;
+                *encontrado = 1;
+            }
+        }
+    }
+}
+
+
+// Auxiliar função 8
+ void coletarDisciplinasPorBloco(
+    Arvore23 *raizDisciplinas,
+    int bloco,
+    Disciplina *resultado,
+    int *quantidade
+)
+{
+    if (raizDisciplinas != NULL) {
+
+        coletarDisciplinasPorBloco(
+            raizDisciplinas->esq,
+            bloco,
+            resultado,
+            quantidade
+        );
+
+        if (
+            raizDisciplinas->info1.tipo == 3 &&
+            raizDisciplinas->info1.dado.disciplina.bloco == bloco
+        ) {
+            resultado[*quantidade] =
+                raizDisciplinas->info1.dado.disciplina;
+            (*quantidade)++;
+        }
+
+        coletarDisciplinasPorBloco(
+            raizDisciplinas->cent,
+            bloco,
+            resultado,
+            quantidade
+        );
+
+        if (raizDisciplinas->nInfos == 2) {
+
+            if (
+                raizDisciplinas->info2.tipo == 3 &&
+                raizDisciplinas->info2.dado.disciplina.bloco == bloco
+            ) {
+                resultado[*quantidade] =
+                    raizDisciplinas->info2.dado.disciplina;
+                (*quantidade)++;
+            }
+
+            coletarDisciplinasPorBloco(
+                raizDisciplinas->dir,
+                bloco,
+                resultado,
+                quantidade
+            );
+        }
+    }
+}
+
+// Função 9
+void listarDisciplinasPorBloco(
+    Arvore23 *raizCursos,
+    int codigoCurso,
+    int bloco,
+    Disciplina *resultado,
+    int *quantidade
+)
+{
+    Arvore23 *noCurso = NULL;
+    Curso    *curso   = NULL;
+
+    *quantidade = 0;
+
+    noCurso = buscar23(raizCursos, codigoCurso);
+
+    if (noCurso != NULL) {
+
+        if (noCurso->info1.chave == codigoCurso)
+            curso = &(noCurso->info1.dado.curso);
+        else
+            curso = &(noCurso->info2.dado.curso);
+
+        coletarDisciplinasPorBloco(
+            curso->raizdisciplinas,
+            bloco,
+            resultado,
+            quantidade
+        );
+    }
+}
+
+
+
 //10
 //aux:
 void imprimirDisciplinasCargaHoraria(
