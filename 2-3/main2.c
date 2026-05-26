@@ -22,6 +22,8 @@ int main()
         printf("\n6 - Contar Alunos de um Curso");
         printf("\n7 - Listar Cursos em Ordem Crescente");
         printf("\n8 - Exibir Dados de um Curso");
+        printf("\n9 - Listar Cursos por Quantidade de Blocos");
+        printf("\n10 - Listar Disciplinas de um Curso em Ordem");
         printf("\n0 - Sair");
 
         printf("\n\nOpcao: ");
@@ -269,7 +271,6 @@ int main()
             break;
         }
 
-       
         case 8:
         {
             int codigoCurso;
@@ -287,12 +288,74 @@ int main()
                 printf("\nCurso nao encontrado.\n");
             } else {
                 printf("\n---------------------------------------------------------------\n");
-                printf("Codigo  : %d\n",   resultado.codigo);
-                printf("Nome    : %s\n",   resultado.nome);
-                printf("Blocos  : %d\n",   resultado.qtdBlocos);
-                printf("Semanas : %d\n",   resultado.semanas);
+                printf("Codigo  : %d\n", resultado.codigo);
+                printf("Nome    : %s\n", resultado.nome);
+                printf("Blocos  : %d\n", resultado.qtdBlocos);
+                printf("Semanas : %d\n", resultado.semanas);
                 printf("---------------------------------------------------------------\n");
             }
+
+            break;
+        }
+
+        // ─────────────────────────────────────────
+        // CASO 9: Listar cursos por quantidade de blocos
+        // A funcao listarCursosqtdblocos já possui os prints internamente
+        // conforme fornecida, então a chamada e validação ficam aqui no main
+        // ─────────────────────────────────────────
+        case 9:
+        {
+            int qtdBlocos;
+
+            printf("\n===== LISTAR CURSOS POR QUANTIDADE DE BLOCOS =====\n");
+
+            printf("Quantidade de blocos: ");
+            scanf("%d", &qtdBlocos);
+
+            if (raizCursos == NULL) {
+                printf("\nNenhum curso cadastrado.\n");
+                break;
+            }
+
+            printf("\n---------------------------------------------------------------\n");
+            printf("Cursos com %d bloco(s):\n", qtdBlocos);
+            printf("---------------------------------------------------------------\n");
+
+            listarCursosqtdblocos(raizCursos, qtdBlocos);
+
+            printf("\n---------------------------------------------------------------\n");
+
+            break;
+        }
+
+        // ─────────────────────────────────────────
+        // CASO 10: Listar disciplinas de um curso em ordem crescente
+        // A funcao listarDisciplinasCurso já possui a lógica internamente
+        // conforme fornecida, então a chamada e validação ficam aqui no main
+        // ─────────────────────────────────────────
+        case 10:
+        {
+            int codigoCurso;
+
+            printf("\n===== LISTAR DISCIPLINAS DE UM CURSO EM ORDEM =====\n");
+
+            printf("Codigo do curso: ");
+            scanf("%d", &codigoCurso);
+
+            Arvore23 *cursoExiste = buscar23(raizCursos, codigoCurso);
+
+            if (cursoExiste == NULL) {
+                printf("\nCurso nao encontrado.\n");
+                break;
+            }
+
+            printf("\n---------------------------------------------------------------\n");
+            printf("Disciplinas do curso %d em ordem crescente:\n", codigoCurso);
+            printf("---------------------------------------------------------------\n");
+
+            listarDisciplinasCurso(raizCursos, codigoCurso);
+
+            printf("\n---------------------------------------------------------------\n");
 
             break;
         }

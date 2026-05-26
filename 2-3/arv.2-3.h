@@ -127,4 +127,10 @@ void buscarDadosCurso(
     int *encontrado
 );
 
+
+void listarCursosqtdblocos(Arvore23 *raiz, int qtdBlocos);
+
+void imprimirDisciplinasEmOrdem(Arvore23 *raizDisciplinas);
+
+void listarDisciplinasCurso(Arvore23 *raizCursos, int codigoCurso);
 #endif 
