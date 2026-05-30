@@ -103,7 +103,7 @@ void menu_cadastrar_curso(Curso **raizCursos) {
 
     } else if (resp == ERRO_REPETIDO) {
 
-        printf("Codigo de curso ja cadastrado.\n");
+        printf("Codigo de curso ja foi cadastrado.\n");
 
     } else {
 
@@ -763,20 +763,7 @@ int main(void){
             break;
 
         case 7:
-
-            if (raizCursos == NULL) {
-
-                printf(
-                    "Nenhum curso cadastrado.\n"
-                );
-
-            } else {
-
-                imprimir_cursos_em_ordem(
-                    raizCursos
-                );
-            }
-
+          imprimir_cursos_em_ordem( raizCursos);
             break;
 
         case 8:
@@ -859,6 +846,7 @@ int main(void){
         }
 
     } while (opcao != 0);
+
 
     return 0;
 }
