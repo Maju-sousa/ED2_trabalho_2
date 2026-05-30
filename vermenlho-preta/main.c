@@ -37,7 +37,6 @@ void exibir_menu(void) {
 
     printf(" 0  - Sair\n");
 
-    printf("========================================\n");
     printf("Opcao: ");
 
     
@@ -56,30 +55,15 @@ void menu_cadastrar_curso(Curso **raizCursos) {
 
     printf("\n CADASTRAR CURSO \n");
 
-
-
-    do {
-
-        printf("Codigo do curso: ");
-        scanf("%d", &cod);
-
-        if (buscarCurso(*raizCursos, cod) != NULL) {
-
-            printf(" Codigo ja cadastrado.\n");
-        }
-
-    } while (buscarCurso(*raizCursos, cod) != NULL);
+    printf("Codigo do curso: ");
+    scanf("%d", &cod);
 
     limpar_buffer();
-
-
 
     printf("Nome do curso: ");
     fgets(nome, sizeof(nome), stdin);
 
     nome[strcspn(nome, "\n")] = '\0';
-
-
 
     do {
 
@@ -87,13 +71,10 @@ void menu_cadastrar_curso(Curso **raizCursos) {
         scanf("%d", &blocos);
 
         if (blocos <= 0) {
-
-            printf(" Quantidade invalida.\n");
+            printf("Quantidade invalida.\n");
         }
 
     } while (blocos <= 0);
-
-
 
     do {
 
@@ -101,27 +82,32 @@ void menu_cadastrar_curso(Curso **raizCursos) {
         scanf("%d", &semanas);
 
         if (semanas <= 0) {
-
-            printf(" Quantidade invalida.\n");
+            printf("Quantidade invalida.\n");
         }
 
     } while (semanas <= 0);
 
     limpar_buffer();
 
-
-
-    resp = add_ArvCurso(raizCursos, cod, nome, blocos, semanas );
-
-
+    resp = add_ArvCurso(
+        raizCursos,
+        cod,
+        nome,
+        blocos,
+        semanas
+    );
 
     if (resp == SUCESSO) {
 
-        printf(" Curso cadastrado com sucesso.\n");
+        printf("Curso cadastrado com sucesso.\n");
+
+    } else if (resp == ERRO_REPETIDO) {
+
+        printf("Codigo de curso ja cadastrado.\n");
 
     } else {
 
-        printf(" Falha no cadastro.\n");
+        printf("Falha no cadastro.\n");
     }
 }
 
@@ -139,10 +125,7 @@ void menu_cadastrar_disciplina(Curso *raizCursos) {
 
     Curso *curso = NULL;
 
-
-
     printf("\n CADASTRAR DISCIPLINA \n");
-
 
     do {
 
@@ -152,71 +135,40 @@ void menu_cadastrar_disciplina(Curso *raizCursos) {
         curso = buscarCurso(raizCursos, codCurso);
 
         if (curso == NULL) {
-
-            printf("[ERRO] Curso nao encontrado.\n");
+            printf("Curso nao encontrado.\n");
         }
 
     } while (curso == NULL);
 
     limpar_buffer();
 
-
-
-    do {
-
-        printf("Codigo da disciplina: ");
-        scanf("%d", &codDisc);
-
-        if (buscarDisciplina(
-                curso->raizdisciplinas,
-                codDisc
-            ) != NULL) {
-
-            printf("O Codigo desta disciplina ja cadastrado.\n");
-        }
-
-    } while (
-        buscarDisciplina(
-            curso->raizdisciplinas,
-            codDisc
-        ) != NULL
-    );
+    printf("Codigo da disciplina: ");
+    scanf("%d", &codDisc);
 
     limpar_buffer();
 
-
-
     printf("Nome da disciplina: ");
-
     fgets(nome, sizeof(nome), stdin);
 
     nome[strcspn(nome, "\n")] = '\0';
 
-
-
     do {
 
-        printf(
-            "Bloco (0 ate %d): ",
-            curso->qtdBlocos - 1
-        );
+        printf("Bloco (0 ate %d): ",
+               curso->qtdBlocos - 1);
 
         scanf("%d", &bloco);
 
-        if (
-            bloco < 0 ||
-            bloco >= curso->qtdBlocos
-        ) {
+        if (bloco < 0 ||
+            bloco >= curso->qtdBlocos) {
 
-            printf("quantidade de blocos invalido.\n");
+            printf("Quantidade de blocos invalida.\n");
         }
 
     } while (
         bloco < 0 ||
         bloco >= curso->qtdBlocos
     );
-
-
 
     do {
 
@@ -232,7 +184,7 @@ void menu_cadastrar_disciplina(Curso *raizCursos) {
             cargahr % curso->semanas != 0
         ) {
 
-            printf(" Carga horaria invalida.\n");
+            printf("Carga horaria invalida.\n");
         }
 
     } while (
@@ -242,21 +194,26 @@ void menu_cadastrar_disciplina(Curso *raizCursos) {
 
     limpar_buffer();
 
-
-
-    resp = add_ArvDisciplina(&curso->raizdisciplinas, codDisc,nome,bloco,cargahr,curso
-    );
+    resp = add_ArvDisciplina(
+      &curso->raizdisciplinas,
+      codDisc,
+      nome,
+      bloco,
+      cargahr);
 
     if (resp == SUCESSO) {
 
-        printf(" Disciplina cadastrada.\n");
+        printf("Disciplina cadastrada.\n");
+
+    } else if (resp == ERRO_REPETIDO) {
+
+        printf("Codigo da disciplina ja cadastrado.\n");
 
     } else {
 
-        printf(" Falha no cadastro.\n");
+        printf("Falha no cadastro.\n");
     }
 }
-
 
 
 void menu_cadastrar_aluno(
@@ -274,50 +231,34 @@ void menu_cadastrar_aluno(
 
     Curso *curso = NULL;
 
-
-
     printf("\n CADASTRAR ALUNO \n");
 
-    do {
-
-        printf("Matricula: ");
-        scanf("%d", &mat);
-
-        if (buscarAluno(*raizAlunos, mat) != NULL) {
-
-            printf(" Matricula ja cadastrada.\n");
-        }
-
-    } while (
-        buscarAluno(*raizAlunos, mat) != NULL
-    );
+    printf("Matricula: ");
+    scanf("%d", &mat);
 
     limpar_buffer();
 
-
-
     printf("Nome do aluno: ");
-
     fgets(nome, sizeof(nome), stdin);
 
     nome[strcspn(nome, "\n")] = '\0';
-
-
 
     do {
 
         printf("Codigo do curso: ");
         scanf("%d", &codCurso);
 
-        curso = buscarCurso(raizCursos, codCurso);
+        curso = buscarCurso(
+            raizCursos,
+            codCurso
+        );
 
         if (curso == NULL) {
 
-            printf("[ERRO] Curso nao encontrado.\n");
+            printf("Curso nao encontrado.\n");
         }
 
     } while (curso == NULL);
-
 
     do {
 
@@ -326,12 +267,10 @@ void menu_cadastrar_aluno(
 
         if (ano <= 0) {
 
-            printf(" Ano invalido.\n");
+            printf("Ano invalido.\n");
         }
 
     } while (ano <= 0);
-
-
 
     do {
 
@@ -353,8 +292,6 @@ void menu_cadastrar_aluno(
 
     limpar_buffer();
 
-
-
     resp = add_ArvAluno(
         raizAlunos,
         mat,
@@ -364,19 +301,19 @@ void menu_cadastrar_aluno(
         curso
     );
 
-
-
     if (resp == SUCESSO) {
 
-        printf(" Aluno cadastrado.\n");
+        printf("Aluno cadastrado.\n");
+
+    } else if (resp == ERRO_REPETIDO) {
+
+        printf("Matricula ja cadastrada.\n");
 
     } else {
 
         printf("Falha no cadastro.\n");
     }
 }
-
-
 
 void menu_mostrar_alunos_por_curso(
     Aluno *raizAlunos,
@@ -389,7 +326,7 @@ void menu_mostrar_alunos_por_curso(
 
 
 
-    printf("\n--- ALUNOS DE UM CURSO ---\n");
+    printf("\n ALUNOS DE UM CURSO \n");
 
 
 
