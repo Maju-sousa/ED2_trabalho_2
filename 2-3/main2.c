@@ -189,18 +189,18 @@ int main()
 
           aluno.nome[strcspn( aluno.nome, "\n" )] = '\0';
 
-         printf("Codigo do curso: ");
-         scanf("%d", &aluno.codigo_curso);
+          printf("Codigo do curso: ");
+          scanf("%d", &aluno.codigo_curso);
 
-        Arvore23 *cursoExiste = buscar23( raizCursos,aluno.codigo_curso);
+          Arvore23 *cursoExiste = buscar23( raizCursos,aluno.codigo_curso);
 
-        if (cursoExiste == NULL) {
+           if (cursoExiste == NULL) {
 
-        printf("\nCurso nao encontrado.\n");
+           printf("\nCurso nao encontrado.\n");
 
-       } else {
+           } else {
 
-        do {
+          do {
 
             printf("Ano de ingresso: ");
             scanf("%d", &aluno.anoingresso);
@@ -252,94 +252,128 @@ int main()
          break;
         }
 
-        case 4:
-        {
-            int codigoCurso;
-            int quantidade = 0;
-            Aluno resultado[1000];
+    case 4:{
+      int codigoCurso;
+      int quantidade = 0;
+      Aluno resultado[1000];
 
-            printf("\n===== LISTAR ALUNOS POR CURSO =====\n");
+      printf("\n===== LISTAR ALUNOS POR CURSO =====\n");
 
-            printf("Codigo do curso: ");
-            scanf("%d", &codigoCurso);
+      printf("Codigo do curso: ");
+      scanf("%d", &codigoCurso);
 
-            Arvore23 *cursoExiste = buscar23(raizCursos, codigoCurso);
+     Arvore23 *cursoExiste = buscar23(
+        raizCursos,
+        codigoCurso);
 
-            if (cursoExiste == NULL) {
-                printf("\nCurso nao encontrado.\n");
-                break;
-            }
+     if (cursoExiste == NULL) {
 
-            listarAlunosPorCurso(raizAlunos, codigoCurso, resultado, &quantidade);
+        printf("\nCurso nao encontrado.\n");
 
-            if (quantidade == 0) {
-                printf("\nNenhum aluno encontrado para este curso.\n");
-            } else {
-                printf("\n%-15s %-50s\n", "Matricula", "Nome");
-              
+     } else {
 
-                int i;
-                for (i = 0; i < quantidade; i++) {
-                    printf("%-15d %-50s\n",
-                        resultado[i].matricula,
-                        resultado[i].nome);
-                }
+        listarAlunosPorCurso(
+            raizAlunos,
+            codigoCurso,
+            resultado,
+            &quantidade
+        );
 
-                printf("\nTotal: %d aluno(s).\n", quantidade);
-            }
+        if (quantidade == 0) {
 
-            break;
-        }
-
-        case 5:
-        {
-            int codigoCurso;
-            int anoIngresso;
-            int quantidade = 0;
-            Aluno resultado[1000];
-
-            printf("\n===== LISTAR ALUNOS POR CURSO E ANO DE INGRESSO =====\n");
-
-            printf("Codigo do curso: ");
-            scanf("%d", &codigoCurso);
-
-            printf("Ano de ingresso: ");
-            scanf("%d", &anoIngresso);
-
-            Arvore23 *cursoExiste = buscar23(raizCursos, codigoCurso);
-
-            if (cursoExiste == NULL) {
-                printf("\nCurso nao encontrado.\n");
-                break;
-            }
-
-            listarAlunosPorCursoEAno(
-                raizAlunos,
-                codigoCurso,
-                anoIngresso,
-                resultado,
-                &quantidade
+            printf(
+                "\nNenhum aluno encontrado para este curso.\n"
             );
 
-            if (quantidade == 0) {
-                printf("\nNenhum aluno encontrado para este curso e ano.\n");
-            } else {
-                printf("\n%-15s %-50s\n", "Matricula", "Nome");
-                printf("---------------------------------------------------------------\n");
+        } else {
 
-                int i;
-                for (i = 0; i < quantidade; i++) {
-                    printf("%-15d %-50s\n",
-                        resultado[i].matricula,
-                        resultado[i].nome);
-                }
+            printf(
+                "\n%-15s %-50s\n",
+                "Matricula",
+                "Nome"
+            );
 
-                printf("\nTotal: %d aluno(s).\n", quantidade);
+            int i;
+
+            for (i = 0; i < quantidade; i++) {
+
+                printf(
+                    "%-15d %-50s\n",
+                    resultado[i].matricula,
+                    resultado[i].nome
+                );
             }
 
-            break;
+            printf("\nTotal: %d aluno(s).\n",   quantidade);
+           }
         }
 
+        break;
+       }
+
+        case 5:{
+        int codigoCurso;
+        int anoIngresso;
+        int quantidade = 0;
+        Aluno resultado[1000];
+
+       printf("\n===== LISTAR ALUNOS POR CURSO E ANO DE INGRESSO =====\n" );
+
+       printf("Codigo do curso: ");
+       scanf("%d", &codigoCurso);
+
+       printf("Ano de ingresso: ");
+       scanf("%d", &anoIngresso);
+
+       Arvore23 *cursoExiste = buscar23(
+        raizCursos,
+        codigoCurso);
+
+       if (cursoExiste == NULL) {
+
+        printf("\nCurso nao encontrado.\n");
+
+       } else {
+
+        listarAlunosPorCursoEAno(
+            raizAlunos,
+            codigoCurso,
+            anoIngresso,
+            resultado,
+            &quantidade
+        );
+
+        if (quantidade == 0) {
+
+            printf(
+                "\nNenhum aluno encontrado para este curso e ano.\n"
+            );
+
+        } else {
+
+            printf(
+                "\n%-15s %-50s\n",
+                "Matricula",
+                "Nome"
+            );
+
+            int i;
+
+            for (i = 0; i < quantidade; i++) {
+
+                printf(
+                    "%-15d %-50s\n",
+                    resultado[i].matricula,
+                    resultado[i].nome
+                );
+            }
+
+             printf("\nTotal: %d aluno(s).\n", quantidade);
+           }
+         }
+
+          break;
+        }
         case 6:
         {
             int codigoCurso;
@@ -354,14 +388,14 @@ int main()
 
             if (cursoExiste == NULL) {
                 printf("\nCurso nao encontrado.\n");
-                break;
-            }
+                
+            }else{
 
             contarAlunosPorCurso(raizAlunos, codigoCurso, &quantidade);
 
             printf("\nO curso de codigo %d possui %d aluno(s).\n",
                 codigoCurso, quantidade);
-
+            }
             break;
         }
 
@@ -434,8 +468,8 @@ int main()
 
             if (raizCursos == NULL) {
                 printf("\nNenhum curso cadastrado.\n");
-                break;
-            }
+                
+            }else{
 
             printf("\n---------------------------------------------------------------\n");
             printf("Cursos com %d bloco(s):\n", qtdBlocos);
@@ -444,7 +478,7 @@ int main()
             listarCursosqtdblocos(raizCursos, qtdBlocos);
 
             printf("\n---------------------------------------------------------------\n");
-
+            }
             break;
         }
 
@@ -461,8 +495,8 @@ int main()
 
             if (cursoExiste == NULL) {
                 printf("\nCurso nao encontrado.\n");
-                break;
-            }
+                
+            }else{
 
             printf("\n---------------------------------------------------------------\n");
             printf("Disciplinas do curso %d em ordem crescente:\n", codigoCurso);
@@ -471,7 +505,7 @@ int main()
             listarDisciplinasCurso(raizCursos, codigoCurso);
 
             printf("\n---------------------------------------------------------------\n");
-
+            }
             break;
         }
 
@@ -494,8 +528,8 @@ int main()
 
             if (cursoExiste == NULL) {
                 printf("\nCurso nao encontrado.\n");
-                break;
-            }
+                
+            }else{
 
             buscarDadosDisciplina(
                 raizCursos,
@@ -514,7 +548,7 @@ int main()
                 printf("Bloco         : %d\n", resultado.bloco);
                 printf("Carga Horaria : %d\n", resultado.cargahr);
             }
-
+            }
             break;
         }
 
@@ -537,8 +571,8 @@ int main()
 
             if (cursoExiste == NULL) {
                 printf("\nCurso nao encontrado.\n");
-                break;
-            }
+                
+            }else{
 
             listarDisciplinasPorBloco(
                 raizCursos,
@@ -566,7 +600,7 @@ int main()
 
                 printf("\nTotal: %d disciplina(s).\n", quantidade);
             }
-
+            }
             break;
         }
 
@@ -587,8 +621,8 @@ int main()
 
             if (cursoExiste == NULL) {
                 printf("\nCurso nao encontrado.\n");
-                break;
-            }
+                
+            }else{
 
             printf("\n---------------------------------------------------------------\n");
             printf("Disciplinas do curso %d com carga horaria %d:\n",
@@ -598,7 +632,7 @@ int main()
             listarDisciplinasMesmoCH(raizCursos, codigoCurso, cargahr);
 
             printf("\n---------------------------------------------------------------\n");
-
+            }
             break;
         }
 
@@ -620,8 +654,8 @@ int main()
 
             if (cursoExiste == NULL) {
                 printf("\nCurso nao encontrado.\n");
-                break;
-            }
+               
+            }else{
 
             removeu = excluirDisciplinaCurso(
                 raizCursos,
@@ -633,7 +667,7 @@ int main()
                 printf("\nDisciplina removida com sucesso!\n");
             else
                 printf("\nDisciplina nao encontrada.\n");
-
+            }
             break;
         }
 
@@ -651,8 +685,8 @@ int main()
 
             if (cursoExiste == NULL) {
                 printf("\nCurso nao encontrado.\n");
-                break;
-            }
+                
+            }else{
 
             removeu = excluirCurso(&raizCursos, codigoCurso);
 
@@ -660,7 +694,7 @@ int main()
                 printf("\nCurso removido com sucesso!\n");
             else
                 printf("\nNao e possivel remover: o curso ainda possui disciplinas cadastradas.\n");
-
+            }
             break;
         }
 
