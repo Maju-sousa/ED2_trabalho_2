@@ -10,9 +10,9 @@ int main()
 
     while (opcao != 0) {
 
-        printf("\n==============================");
-        printf("\n        MENU PRINCIPAL");
-        printf("\n==============================");
+      
+        printf("\n  MENU PRINCIPAL");
+    
 
         printf("\n1  - Cadastrar Curso");
         printf("\n2  - Cadastrar Disciplina");
@@ -42,7 +42,7 @@ int main()
         {
             Curso curso;
 
-            printf("\n===== CADASTRAR CURSO =====\n");
+            printf("\n CADASTRAR CURSO \n");
 
             printf("Codigo: ");
             scanf("%d", &curso.codigo);
@@ -69,73 +69,187 @@ int main()
             break;
         }
 
-        case 2:
-        {
-            Disciplina disciplina;
-            int codigoCurso;
+    case 2:{
+       Disciplina disciplina;
+       int codigoCurso;
 
-            printf("\n===== CADASTRAR DISCIPLINA =====\n");
+      printf("\n CADASTRAR DISCIPLINA \n");
 
-            printf("Codigo do curso: ");
-            scanf("%d", &codigoCurso);
+      printf("Codigo do curso: ");
+      scanf("%d", &codigoCurso);
 
-            printf("Codigo da disciplina: ");
-            scanf("%d", &disciplina.codigo);
+      Arvore23 *cursoExiste= buscar23(
+            raizCursos,
+            codigoCurso
+        );
 
-            getchar();
+      if (cursoExiste == NULL) {
 
-            printf("Nome da disciplina: ");
-            fgets(disciplina.nome, 50, stdin);
-            disciplina.nome[strcspn(disciplina.nome, "\n")] = '\0';
+        printf("\nCurso nao encontrado.\n");
 
-            printf("Bloco da disciplina: ");
+     } else {
+
+        Curso *curso;
+
+        if (cursoExiste->info1.chave == codigoCurso)
+            curso = &(cursoExiste->info1.dado.curso);
+        else
+            curso = &(cursoExiste->info2.dado.curso);
+
+        printf("Codigo da disciplina: ");
+        scanf("%d", &disciplina.codigo);
+
+        getchar();
+
+        printf("Nome da disciplina: ");
+        fgets(disciplina.nome, 50, stdin);
+
+        disciplina.nome[
+            strcspn(
+                disciplina.nome,
+                "\n"
+            )
+        ] = '\0';
+
+        do {
+
+            printf(
+                "Bloco (0 ate %d): ",
+                curso->qtdBlocos - 1
+            );
+
             scanf("%d", &disciplina.bloco);
 
-            printf("Carga horaria: ");
+            if (
+                disciplina.bloco < 0 ||
+                disciplina.bloco >= curso->qtdBlocos
+            ) {
+                printf("Bloco invalido.\n");
+            }
+
+        } while (
+            disciplina.bloco < 0 ||
+            disciplina.bloco >= curso->qtdBlocos
+        );
+
+        do {
+
+            printf(
+                "Carga horaria (multiplo de %d): ",
+                curso->semanas
+            );
+
             scanf("%d", &disciplina.cargahr);
 
-            cadastrarDisciplina(raizCursos, codigoCurso, disciplina, &flag);
+            if (
+                disciplina.cargahr <= 0 ||
+                disciplina.cargahr % curso->semanas != 0
+            ) {
+                printf("Carga horaria invalida.\n");
+            }
 
-            if (flag)
-                printf("\nDisciplina cadastrada com sucesso!\n");
-            else
-                printf("\nErro ao cadastrar disciplina.\n");
+        } while (
+            disciplina.cargahr <= 0 ||
+            disciplina.cargahr % curso->semanas != 0
+        );
 
-            break;
+        cadastrarDisciplina(
+            raizCursos,
+            codigoCurso,
+            disciplina,
+            &flag
+        );
+
+        if (flag)
+            printf(
+                "\nDisciplina cadastrada com sucesso!\n"
+            );
+        else
+            printf(
+                "\nErro ao cadastrar disciplina.\n"
+            );
+          }
+
+           break;
         }
 
-        case 3:
-        {
-            Aluno aluno;
+       
+         case 3:{
+          Aluno aluno;
 
-            printf("\n===== CADASTRAR ALUNO =====\n");
+          printf("\n CADASTRAR ALUNO \n");
 
-            printf("Matricula: ");
-            scanf("%d", &aluno.matricula);
+          printf("Matricula: ");
+          scanf("%d", &aluno.matricula);
 
-            getchar();
+          getchar();
 
-            printf("Nome: ");
-            fgets(aluno.nome, 50, stdin);
-            aluno.nome[strcspn(aluno.nome, "\n")] = '\0';
+          printf("Nome: ");
+          fgets(aluno.nome, 50, stdin);
 
-            printf("Codigo do curso: ");
-            scanf("%d", &aluno.codigo_curso);
+          aluno.nome[strcspn( aluno.nome, "\n" )] = '\0';
+
+         printf("Codigo do curso: ");
+         scanf("%d", &aluno.codigo_curso);
+
+        Arvore23 *cursoExiste = buscar23( raizCursos,aluno.codigo_curso);
+
+        if (cursoExiste == NULL) {
+
+        printf("\nCurso nao encontrado.\n");
+
+       } else {
+
+        do {
 
             printf("Ano de ingresso: ");
             scanf("%d", &aluno.anoingresso);
 
-            printf("Semestre de ingresso (1 ou 2): ");
+            if (aluno.anoingresso <= 0)
+                printf("Ano invalido.\n");
+
+        } while (
+            aluno.anoingresso <= 0
+        );
+
+        do {
+
+            printf(
+                "Semestre de ingresso (1 ou 2): "
+            );
+
             scanf("%d", &aluno.semestre);
 
-            cadastrarAluno(&raizAlunos, raizCursos, aluno, &flag);
+            if (
+                aluno.semestre != 1 &&
+                aluno.semestre != 2
+            ) {
+                printf("Semestre invalido.\n");
+            }
 
-            if (flag)
-                printf("\nAluno cadastrado com sucesso!\n");
-            else
-                printf("\nErro ao cadastrar aluno.\n");
+        } while (
+            aluno.semestre != 1 &&
+            aluno.semestre != 2
+        );
 
-            break;
+        cadastrarAluno(
+            &raizAlunos,
+            raizCursos,
+            aluno,
+            &flag
+        );
+
+        if (flag)
+            printf(
+                "\nAluno cadastrado com sucesso!\n"
+            );
+        else
+            printf(
+                "\nErro ao cadastrar aluno.\n"
+            );
+        }
+
+         break;
         }
 
         case 4:
@@ -162,7 +276,7 @@ int main()
                 printf("\nNenhum aluno encontrado para este curso.\n");
             } else {
                 printf("\n%-15s %-50s\n", "Matricula", "Nome");
-                printf("---------------------------------------------------------------\n");
+              
 
                 int i;
                 for (i = 0; i < quantidade; i++) {
@@ -394,12 +508,11 @@ int main()
             if (!encontrado) {
                 printf("\nDisciplina nao encontrada.\n");
             } else {
-                printf("\n---------------------------------------------------------------\n");
+                
                 printf("Codigo        : %d\n", resultado.codigo);
                 printf("Nome          : %s\n", resultado.nome);
                 printf("Bloco         : %d\n", resultado.bloco);
                 printf("Carga Horaria : %d\n", resultado.cargahr);
-                printf("---------------------------------------------------------------\n");
             }
 
             break;
@@ -412,7 +525,7 @@ int main()
             int quantidade = 0;
             Disciplina resultado[1000];
 
-            printf("\n===== LISTAR DISCIPLINAS DE UM BLOCO =====\n");
+            printf("\nLISTAR DISCIPLINAS DE UM BLOCO\n");
 
             printf("Codigo do curso: ");
             scanf("%d", &codigoCurso);
@@ -440,7 +553,7 @@ int main()
             } else {
                 printf("\n%-10s %-50s %-10s %-15s\n",
                     "Codigo", "Nome", "Bloco", "Carga Horaria");
-                printf("---------------------------------------------------------------\n");
+            
 
                 int i;
                 for (i = 0; i < quantidade; i++) {
