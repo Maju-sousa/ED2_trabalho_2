@@ -4,9 +4,9 @@
 #define RED 1
 #define BLACK 0
 
-#define SUCESSO        1
-#define ERRO_CURSO     0
-#define ERRO_REPETIDO  5
+#define SUCESSO 1
+#define ERRO_CURSO 0
+#define ERRO_REPETIDO 5
 #define ERRO_DISCIPLINA 6
 
 typedef struct Nobase Nobase;
@@ -22,28 +22,28 @@ typedef struct Nobase {
 
 typedef struct Aluno {
     Nobase  base;
-    int     matricula;
-    char    nome[50];
-    int     anoingresso;
-    int     semestre;
-    Curso  *curso;
+    int matricula;
+    char nome[50];
+    int anoingresso;
+    int semestre;
+    Curso *curso;
 } Aluno;
 
 typedef struct Curso {
-    Nobase      base;
-    int         codigo;
-    char        nome[50];
-    int         qtdBlocos;
-    int         semanas;
+    Nobase base;
+    int codigo;
+    char nome[50];
+    int qtdBlocos;
+    int semanas;
     Disciplina *raizdisciplinas;
 } Curso;
 
 typedef struct Disciplina {
     Nobase base;
-    int    codigo;
-    char   nome[50];
-    int    bloco;
-    int    cargahr;
+    int codigo;
+    char nome[50];
+    int bloco;
+    int cargahr;
 } Disciplina;
 
 int cor(Nobase *raiz);
@@ -144,8 +144,7 @@ int add_ArvDisciplina(
     int cod,
     char nome[],
     int bloco,
-    int cargahr,
-    Curso *curso
+    int cargahr
 );
 
 Disciplina* buscarDisciplina(
