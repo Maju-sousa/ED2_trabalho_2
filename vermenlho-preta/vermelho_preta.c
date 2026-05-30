@@ -185,11 +185,12 @@ Disciplina* inserirDisciplina(Disciplina *r, int cod, char nome[], int bloco, in
 
     return r;
 }
-int add_ArvDisciplina(Disciplina **r, int cod, char nome[], int bloco, int cargahr, Curso *curso) {
-    
-     int resp = SUCESSO;
+int add_ArvDisciplina( Disciplina **r, int cod, char nome[], int bloco, int cargahr) 
+{
+    int resp = SUCESSO;
 
     *r = inserirDisciplina( *r, cod, nome, bloco, cargahr, &resp);
+
     if (*r != NULL)
         (*r)->base.cor = BLACK;
 
